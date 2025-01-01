@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import MenuItem from '../../Components/Sheard/MenuItems/MenuItem';
 import Cover from '../../pages/Sharde/Cover/Cover';
 
@@ -16,6 +17,9 @@ const MenuCategory = ({ items , title, img}) => {
                          </MenuItem>)
                 }
             </div>
+            <Link to={`/order/${title}`}>
+                <button className='btn btn-outline border-0 border-b-4 mt-4'>Oder now</button>
+            </Link>
         </div>
     );
 };

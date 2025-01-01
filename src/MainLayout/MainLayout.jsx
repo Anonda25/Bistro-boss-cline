@@ -1,15 +1,18 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Footer from '../pages/Sharde/Footer/Footer';
 import Navbar from '../pages/Sharde/Navbar/navbar';
 const MainLayout = () => {
+    const loaction = useLocation()
+    console.log(loaction);
+    const nonavberfooter = loaction.pathname.includes('login') || loaction.pathname.includes('register')
     return (
         <div>
-            <Navbar></Navbar>
+           {nonavberfooter || <Navbar></Navbar>}
           <div className='max-w'>
                 <Outlet></Outlet>
           </div>
-          <Footer></Footer>
+        {nonavberfooter ||  <Footer></Footer>}
         </div>
     );
 };

@@ -15,7 +15,7 @@ import { MdReviews } from 'react-icons/md';
 const Testimoneial = () => {
     const [reviews , setReview]=useState([])
     useEffect(()=>{
-        fetch('reviews.json')
+        fetch('http://localhost:5000/reviwes')
         .then(res => res.json())
         .then(data =>{
             setReview(data)
