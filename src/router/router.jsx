@@ -9,6 +9,8 @@ import Login from "../pages/Login&Register/Login";
 import Register from "../pages/Login&Register/Register";
 import Secreat from "../pages/Sharde/Secreat/Secreat";
 import PriveateRoutes from "./PriveateRoutes";
+import DeshBord from "../MainLayout/DashBord/DeshBord";
+import Card from "../pages/Dashbord/Card";
 
 const router = createBrowserRouter([
     {
@@ -40,6 +42,16 @@ const router = createBrowserRouter([
             }
         ]
     },
+    {
+        path:'dashbord',
+        element:<DeshBord></DeshBord>,
+        children:[
+            {
+                path: 'cart',
+                element:<Card></Card>
+            }
+        ]
+    }
 ]);
 
 export default router
