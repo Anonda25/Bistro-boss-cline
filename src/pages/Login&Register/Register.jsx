@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../../AuthProvider/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import UseAxiosPublic from "../../Hooks/UseAxiosPublic";
+import SocilLogin from "../../Components/SocilLogin/SocilLogin";
 
 
 
@@ -11,24 +13,36 @@ const Register = () => {
     const { register, handleSubmit, watch, formState: { errors }, } = useForm()
     const { creactUser, updateProfiles } = useContext(AuthContext)
     const Navigate = useNavigate()
-
+    const AxiosPublic = UseAxiosPublic()
     const onSubmit = (data) => {
-        console.log(data)
+
         creactUser(data.email, data.password)
             .then(result => {
                 const user = result.user;
-                console.log(user);
+
                 updateProfiles(data.name, data.photoURL)
-                    .then(res => {
-                        console.log(res);
-                        Navigate('/');
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: "Register Success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    .then(() => {
+                        // save in the user in db 
+
+                        const userinfo = {
+                            name: data.name,
+                            email: data.email
+                        }
+                        AxiosPublic.post('/users', userinfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    console.log(' user save in the db');
+                                    Swal.fire({
+                                        position: "top-end",
+                                        icon: "success",
+                                        title: "Register Success",
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    Navigate('/');
+                                }
+                            })
+
                     })
                     .catch(error => console.log(error))
             })
@@ -90,7 +104,8 @@ const Register = () => {
 
                         </div>
                         <div className="form-control mt-6">
-                            <button className="btn btn-primary">Register</button>
+                            <button className="btn btn-primary mb-3">Register</button>
+                            <SocilLogin></SocilLogin>
                         </div>
                     </form>
                     <p className='text-center mb-5 font-xl uppercase '>allready you have an accoutn please <Link to={'/login'} className='underline text-green-300'>Login</Link></p>

@@ -11,6 +11,7 @@ import Secreat from "../pages/Sharde/Secreat/Secreat";
 import PriveateRoutes from "./PriveateRoutes";
 import DeshBord from "../MainLayout/DashBord/DeshBord";
 import Card from "../pages/Dashbord/Card";
+import AllUser from "../pages/Dashbord/AllUser/AllUser";
 
 const router = createBrowserRouter([
     {
@@ -44,11 +45,17 @@ const router = createBrowserRouter([
     },
     {
         path:'dashbord',
-        element:<DeshBord></DeshBord>,
+        element: <PriveateRoutes><DeshBord></DeshBord></PriveateRoutes>,
         children:[
             {
                 path: 'cart',
                 element:<Card></Card>
+            },
+
+            //admin manage 
+            {
+                path:'allUser',
+                element: <AllUser></AllUser>
             }
         ]
     }

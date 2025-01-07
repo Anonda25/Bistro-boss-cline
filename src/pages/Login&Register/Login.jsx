@@ -5,6 +5,7 @@ import { AuthContext } from '../../AuthProvider/AuthProvider';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Swal from 'sweetalert2';
+import SocilLogin from '../../Components/SocilLogin/SocilLogin';
 
 
 const Login = () => {
@@ -91,7 +92,8 @@ const Login = () => {
                             
                         </div>
                         <div className="form-control mt-6">
-                            <button disabled={disabled} className="btn btn-primary">Login</button>
+                            <button disabled={disabled} className="btn btn-primary mb-3">Login</button>
+                            <SocilLogin></SocilLogin>
                         </div>
                     </form>
                     <p className='text-center mb-5 font-xl uppercase '><small>new User <Link to={'/register'} className='underline text-green-300'>creact a account</Link></small></p>

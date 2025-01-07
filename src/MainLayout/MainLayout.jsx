@@ -4,7 +4,6 @@ import Footer from '../pages/Sharde/Footer/Footer';
 import Navbar from '../pages/Sharde/Navbar/Navbar';
 const MainLayout = () => {
     const loaction = useLocation()
-    console.log(loaction);
     const nonavberfooter = loaction.pathname.includes('login') || loaction.pathname.includes('register')
     return (
         <div>
