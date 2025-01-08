@@ -12,6 +12,9 @@ import PriveateRoutes from "./PriveateRoutes";
 import DeshBord from "../MainLayout/DashBord/DeshBord";
 import Card from "../pages/Dashbord/Card";
 import AllUser from "../pages/Dashbord/AllUser/AllUser";
+import AddItems from "../pages/Dashbord/AddItems/AddItems";
+import AdimnRoutes from "../AuthProvider/AdimnRoutes";
+import ManageItems from "../pages/Dashbord/manageItems/ManageItems";
 
 const router = createBrowserRouter([
     {
@@ -47,15 +50,24 @@ const router = createBrowserRouter([
         path:'dashbord',
         element: <PriveateRoutes><DeshBord></DeshBord></PriveateRoutes>,
         children:[
+            //normal user
             {
                 path: 'cart',
                 element:<Card></Card>
             },
 
-            //admin manage 
+            //admin only manage 
+            {
+                path:'addItems',
+                element: <AdimnRoutes><AddItems></AddItems></AdimnRoutes>
+            },
+            {
+                path:'manageItems',
+                element: <ManageItems></ManageItems>
+            },
             {
                 path:'allUser',
-                element: <AllUser></AllUser>
+                element: <AdimnRoutes><AllUser></AllUser></AdimnRoutes>
             }
         ]
     }
