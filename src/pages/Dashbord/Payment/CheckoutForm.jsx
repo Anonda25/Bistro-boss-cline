@@ -2,6 +2,8 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useEffect, useState } from 'react';
 import UseAxiosSecure from '../../../Hooks/UseAxiosSecure';
 import UseCart from '../../../Hooks/UseCart';
+import UseAuth from '../../../Hooks/UseAuth';
+import Swal from 'sweetalert2';
 
 
 
@@ -10,18 +12,23 @@ const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
     const AxiosSecure = UseAxiosSecure();
-    const [cart] = UseCart();
+    const [cart, refetch] = UseCart();
+    const [trangstionid , setTrangstionid]=useState()
+    // const total = cart.reduce((sum, item) => sum + item.price, 0);
+    // const price = parseFloat(total.toFixed(2))
     const TotalPrice = cart.reduce((total, items) => total + items.price, 0)
-    const [clientSecret, setClientSecret]=useState()
-
+    const [clientSecret, setClientSecret] = useState()
+    const { user } = UseAuth()
 
     useEffect(() => {
 
-        AxiosSecure.post('/payment', { price: TotalPrice })
-        .then(res=>{
-            console.log(res.data.clientSecret);
-            setClientSecret(res.data.clientSecret);
-        })
+       if(TotalPrice > 0){
+           AxiosSecure.post('/payment', { price: TotalPrice })
+               .then(res => {
+                   console.log(res.data.clientSecret);
+                   setClientSecret(res.data.clientSecret);
+               })
+       }
 
 
     }, [AxiosSecure, TotalPrice])
@@ -54,6 +61,51 @@ const CheckoutForm = () => {
             setError('')
         };
 
+        const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret,{
+            payment_method:{
+                card:card,
+                billing_details: {
+                    email: user?.email || 'anonymous',
+                    name: user?.displayName || 'anonymous'
+                }
+            }
+        })
+
+        if (confirmError) {
+            console.log("ConfirmError", confirmError);
+            // setError(confirmError.message); // Display the error message
+        } else {
+            console.log('PaymentIntent', paymentIntent);
+            if (paymentIntent.status === 'succeeded'){
+                console.log(`Payment succeeded! Payment ID: ${paymentIntent.id}`);
+                setTrangstionid(`Payment succeeded! Payment ID: ${paymentIntent.id}`); 
+
+
+                const payment = {
+                    email : user.email,
+                    price: TotalPrice,
+                    transactionId: paymentIntent.id,
+                    date: new Date(), // utc data convert. use moment js to 
+                    cardIds:cart.map(item => item._id),
+                    menuItemIds:cart.map(item=> item.menuId),
+                    status:'pending'
+                }
+
+                const res = await AxiosSecure.post('/payments', payment);
+                console.log(res.data);
+                refetch()
+                if(res.data?.deleteResult?.deletedCount > 0){
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Your Payment has been success",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            }
+        }
+
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -77,6 +129,9 @@ const CheckoutForm = () => {
                 Pay
             </button>
             <p className='text-sm text-red-600 '>{error}</p>
+            {
+                trangstionid && <p>{trangstionid}</p>
+            }
         </form>
     );
 };

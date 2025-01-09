@@ -17,6 +17,7 @@ import AdimnRoutes from "../AuthProvider/AdimnRoutes";
 import ManageItems from "../pages/Dashbord/manageItems/ManageItems";
 import Updateitems from "../pages/Dashbord/Updateitems/Updateitems";
 import Payment from "../pages/Dashbord/Payment/Payment";
+import PaymentsHistory from "../pages/Dashbord/PaymentsHistory/PaymentsHistory";
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
             {
                 path: 'Payment',
                 element:<Payment></Payment>
+            },
+            {
+                path: 'PaymentHistory',
+                element:<PaymentsHistory></PaymentsHistory>
             },
 
             //admin only manage 
