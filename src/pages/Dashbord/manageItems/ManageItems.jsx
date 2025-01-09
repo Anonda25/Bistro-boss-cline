@@ -2,18 +2,44 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import useMenu from "../../../Hooks/UseMenu";
 import DashbordTitle from "../DashbordTitle";
 import { FaEdit } from "react-icons/fa";
+import Swal from "sweetalert2";
+import UseAxiosSecure from "../../../Hooks/UseAxiosSecure";
+import { Link } from "react-router-dom";
 
 
 const ManageItems = () => {
-    const [menu] = useMenu()
+    const [menu, , refetch] = useMenu()
 
-    const hendleDelete = (id) => {
-        console.log(id);
+    const AxiosSecure = UseAxiosSecure()
+    const hendleDelete = (item) => {
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+
+                const res = await AxiosSecure.delete(`/menu/${item._id}`)
+                // console.log(res.data);
+
+                if (res.data.deletedCount > 0) {
+                    refetch()
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: `{items has been  deleted.}`,
+                        icon: "success"
+                    });
+                }
+
+            }
+        });
     }
 
-    const handleUpdate = (id) => {
-        console.log(id);
-    }
     return (
         <div>
             <DashbordTitle heading={"MANAGE ALL ITEMS"} subHadding="Hurry Up!"></DashbordTitle>
@@ -57,10 +83,12 @@ const ManageItems = () => {
                                     </td>
                                     <td>{item.price}</td>
                                     <th>
-                                        <button onClick={() => handleUpdate(item._id)} className="btn text-xl bg-[#B91C1C]  text-white "><FaEdit /></button>
+                                        <Link to={`/dashbord/updateItems/${item._id}`}>
+                                            <button className="btn text-xl bg-[#B91C1C]  text-white "><FaEdit /></button>
+                                        </Link>
                                     </th>
                                     <th>
-                                        <button onClick={() => hendleDelete(item._id)} className="btn text-xl bg-[#B91C1C]  text-white "><RiDeleteBin5Line /></button>
+                                        <button onClick={() => hendleDelete(item)} className="btn text-xl bg-[#B91C1C]  text-white "><RiDeleteBin5Line /></button>
                                     </th>
                                 </tr>)
                             }

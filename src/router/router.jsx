@@ -15,6 +15,8 @@ import AllUser from "../pages/Dashbord/AllUser/AllUser";
 import AddItems from "../pages/Dashbord/AddItems/AddItems";
 import AdimnRoutes from "../AuthProvider/AdimnRoutes";
 import ManageItems from "../pages/Dashbord/manageItems/ManageItems";
+import Updateitems from "../pages/Dashbord/Updateitems/Updateitems";
+import Payment from "../pages/Dashbord/Payment/Payment";
 
 const router = createBrowserRouter([
     {
@@ -55,6 +57,10 @@ const router = createBrowserRouter([
                 path: 'cart',
                 element:<Card></Card>
             },
+            {
+                path: 'Payment',
+                element:<Payment></Payment>
+            },
 
             //admin only manage 
             {
@@ -63,7 +69,12 @@ const router = createBrowserRouter([
             },
             {
                 path:'manageItems',
-                element: <ManageItems></ManageItems>
+                element: <AdimnRoutes><ManageItems></ManageItems></AdimnRoutes>
+            },
+            {
+                path:'updateItems/:id',
+                element: <AdimnRoutes><Updateitems></Updateitems></AdimnRoutes>,
+                loader: ({ params }) => fetch(`http://localhost:5000/menu/${params.id}`)
             },
             {
                 path:'allUser',

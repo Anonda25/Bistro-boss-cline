@@ -4,6 +4,7 @@ import DashbordTitle from './DashbordTitle';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import Swal from 'sweetalert2';
 import UseAxiosSecure from '../../Hooks/UseAxiosSecure';
+import { Link } from 'react-router-dom';
 
 const Card = () => {
     const [cart, refetch ]=UseCart()
@@ -49,7 +50,11 @@ const Card = () => {
             <div className='flex justify-between items-center '>
                 <h1 className='text-xl font-bold '>TOTAL ORDER : {cart.length}</h1>
                 <h2 className='text-xl font-bold'>TOTAL PRICE : ${totalPrice}</h2>
-                <button className='btn bg-[#D1A054]'>PAY</button>
+                {cart.length ?<Link to={"/dashbord/payment"}>
+                    <button disabled={!cart.length} className='btn bg-[#D1A054]'>PAY</button>
+                </Link>:
+                <button disabled className='btn bg-[#D1A054]'>PAY</button>
+                }
             </div>
             <div className="overflow-x-auto mt-10">
                 <table className="table w-full">
